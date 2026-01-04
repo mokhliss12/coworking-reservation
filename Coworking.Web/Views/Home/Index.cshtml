@@ -18,16 +18,32 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card h-100">
-            <div class="card-body text-center">
-                <div class="mb-3" style="font-size: 3rem;">📅</div>
-                <h5 class="card-title">Réservations</h5>
-                <p class="card-text text-muted">Consultez et gérez toutes les réservations.</p>
-                <a asp-controller="Reservations" asp-action="Index" class="btn btn-primary">Voir les réservations</a>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">📅</div>
+                    <h5 class="card-title">Réservations</h5>
+                    <p class="card-text text-muted">Consultez et gérez toutes les réservations.</p>
+                    <a asp-controller="Reservations" asp-action="Index" class="btn btn-primary">Voir les réservations</a>
+                </div>
             </div>
         </div>
-    </div>
+    }
+    else
+    {
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">🔐</div>
+                    <h5 class="card-title">Connexion</h5>
+                    <p class="card-text text-muted">Connectez-vous pour gérer vos réservations.</p>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Se connecter</a>
+                </div>
+            </div>
+        </div>
+    }
     <div class="col-md-4">
         <div class="card h-100">
             <div class="card-body text-center">
@@ -54,14 +70,17 @@
             </div>
         </div>
     }
-    <div class="col-md-6">
-        <div class="card h-100">
-            <div class="card-body text-center">
-                <div class="mb-3" style="font-size: 3rem;">🔔</div>
-                <h5 class="card-title">Notifications</h5>
-                <p class="card-text text-muted">Consultez vos notifications et alertes.</p>
-                <a asp-controller="Notifications" asp-action="Index" class="btn btn-info">Voir les notifications</a>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">🔔</div>
+                    <h5 class="card-title">Notifications</h5>
+                    <p class="card-text text-muted">Consultez vos notifications et alertes.</p>
+                    <a asp-controller="Notifications" asp-action="Index" class="btn btn-info">Voir les notifications</a>
+                </div>
             </div>
         </div>
-    </div>
+    }
 </div>

@@ -28,7 +28,8 @@
             <dd class="col-sm-9">@Model.DateFin.ToString("dd/MM/yyyy HH:mm")</dd>
         </dl>
 
-        <form asp-action="Delete" method="post">
+        <form asp-action="Delete" asp-controller="Reservations" method="post">
+            @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Id" />
             <button type="submit" class="btn btn-danger">
                 <span>❌</span> Annuler la réservation

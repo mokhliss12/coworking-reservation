@@ -238,6 +238,31 @@ public class ReservationsController : Controller
             return NotFound();
         }
 
+        var user = await _userManager.GetUserAsync(User);
+        
+        // Security check: clients can only edit their own reservations
+        var existingReservation = await _context.Reservations.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id);
+        if (existingReservation == null)
+        {
+            return NotFound();
+        }
+
+        if (!User.IsInRole("Admin") && existingReservation.ClientEmail != user!.Email)
+        {
+            return Forbid();
+        }
+
+        // Pour les clients, utiliser leurs informations depuis le compte et ignorer les erreurs de validation pour ces champs
+        if (!User.IsInRole("Admin"))
+        {
+            reservation.ClientEmail = user!.Email!;
+            reservation.ClientNom = $"{user.Prenom} {user.Nom}";
+            // Supprimer les erreurs de validation pour les champs client car ils sont remplis automatiquement
+            ModelState.Remove(nameof(reservation.ClientEmail));
+            ModelState.Remove(nameof(reservation.ClientNom));
+            ModelState.Remove(nameof(reservation.ClientTelephone));
+        }
+
         if (ModelState.IsValid)
         {
             try

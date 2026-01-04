@@ -101,6 +101,7 @@
                     @if (User.IsInRole("Admin") && reservation.Statut == "EnAttente")
                     {
                         <form asp-action="Confirmer" asp-controller="Reservations" asp-route-id="@reservation.Id" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
                         </form>
                     }

@@ -9,6 +9,7 @@
 <div class="card">
     <div class="card-body">
         <form asp-action="Edit" asp-controller="Reservations" method="post">
+            @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Id" />
             <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
 
@@ -20,23 +21,33 @@
         <span asp-validation-for="SalleId" class="text-danger"></span>
     </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="ClientNom" class="form-label"></label>
-        <input asp-for="ClientNom" class="form-control" />
-        <span asp-validation-for="ClientNom" class="text-danger"></span>
-    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="form-group mb-3">
+            <label asp-for="ClientNom" class="form-label"></label>
+            <input asp-for="ClientNom" class="form-control" />
+            <span asp-validation-for="ClientNom" class="text-danger"></span>
+        </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="ClientEmail" class="form-label"></label>
-        <input asp-for="ClientEmail" type="email" class="form-control" />
-        <span asp-validation-for="ClientEmail" class="text-danger"></span>
-    </div>
+        <div class="form-group mb-3">
+            <label asp-for="ClientEmail" class="form-label"></label>
+            <input asp-for="ClientEmail" type="email" class="form-control" />
+            <span asp-validation-for="ClientEmail" class="text-danger"></span>
+        </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="ClientTelephone" class="form-label"></label>
-        <input asp-for="ClientTelephone" class="form-control" />
-        <span asp-validation-for="ClientTelephone" class="text-danger"></span>
-    </div>
+        <div class="form-group mb-3">
+            <label asp-for="ClientTelephone" class="form-label"></label>
+            <input asp-for="ClientTelephone" class="form-control" />
+            <span asp-validation-for="ClientTelephone" class="text-danger"></span>
+        </div>
+    }
+    else
+    {
+        @* Les champs client sont en lecture seule pour les non-admins *@
+        <input type="hidden" asp-for="ClientNom" />
+        <input type="hidden" asp-for="ClientEmail" />
+        <input type="hidden" asp-for="ClientTelephone" />
+    }
 
     <div class="form-group mb-3">
         <label asp-for="DateDebut" class="form-label"></label>
@@ -50,15 +61,23 @@
         <span asp-validation-for="DateFin" class="text-danger"></span>
     </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="Statut" class="form-label"></label>
-        <select asp-for="Statut" class="form-control">
-            <option value="EnAttente">En attente</option>
-            <option value="Confirmee">Confirmée</option>
-            <option value="Annulee">Annulée</option>
-        </select>
-        <span asp-validation-for="Statut" class="text-danger"></span>
-    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="form-group mb-3">
+            <label asp-for="Statut" class="form-label"></label>
+            <select asp-for="Statut" class="form-control">
+                <option value="EnAttente">En attente</option>
+                <option value="Confirmee">Confirmée</option>
+                <option value="Annulee">Annulée</option>
+            </select>
+            <span asp-validation-for="Statut" class="text-danger"></span>
+        </div>
+    }
+    else
+    {
+        @* Les clients ne peuvent pas modifier le statut *@
+        <input type="hidden" asp-for="Statut" />
+    }
 
             <div class="mt-4">
                 <button type="submit" class="btn btn-primary">

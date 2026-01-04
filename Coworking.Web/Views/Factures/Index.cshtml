@@ -80,6 +80,7 @@
                     @if (!facture.EstPayee && User.IsInRole("Admin"))
                     {
                         <form asp-action="MarquerPayee" asp-controller="Factures" asp-route-id="@facture.Id" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-sm btn-success">Marquer payée</button>
                         </form>
                     }

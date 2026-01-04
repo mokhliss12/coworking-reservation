@@ -9,6 +9,7 @@
 <div class="card">
     <div class="card-body">
         <form asp-action="Edit" asp-controller="Salles" method="post">
+            @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Id" />
             <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
 

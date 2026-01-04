@@ -10,6 +10,7 @@
     @if (nonLues > 0)
     {
         <form asp-action="MarquerToutesLues" asp-controller="Notifications" method="post">
+            @Html.AntiForgeryToken()
             <button type="submit" class="btn btn-secondary">Marquer toutes comme lues</button>
         </form>
     }
@@ -85,6 +86,7 @@
                     @if (!notification.EstLue)
                     {
                         <form asp-action="MarquerLue" asp-controller="Notifications" asp-route-id="@notification.Id" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-sm btn-success">Marquer lue</button>
                         </form>
                     }

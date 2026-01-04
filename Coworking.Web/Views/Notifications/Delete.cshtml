@@ -19,7 +19,8 @@
         <dd class="col-sm-10">@Model.DateCreation.ToString("dd/MM/yyyy HH:mm")</dd>
     </dl>
 
-    <form asp-action="Delete" method="post">
+    <form asp-action="Delete" asp-controller="Notifications" method="post">
+        @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Id" />
         <button type="submit" class="btn btn-danger">Supprimer</button>
         <a asp-action="Index" class="btn btn-secondary">Retour</a>

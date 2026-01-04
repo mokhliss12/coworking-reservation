@@ -11,7 +11,8 @@
                 <h3 class="mb-0 text-center">🔐 Connexion</h3>
             </div>
             <div class="card-body">
-                <form asp-action="Login" method="post">
+                <form asp-action="Login" asp-controller="Account" method="post">
+                    @Html.AntiForgeryToken()
                     <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
@@ -23,7 +24,7 @@
 
                     <div class="form-group">
                         <label asp-for="Password"></label>
-                        <input asp-for="Password" class="form-control" placeholder="••••••••" />
+                        <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 
