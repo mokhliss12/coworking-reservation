@@ -1,0 +1,40 @@
+@model Coworking.Core.Entities.Reservation
+
+@{
+    ViewData["Title"] = "Annuler la réservation";
+}
+
+<h2>Annuler la réservation</h2>
+
+<div class="card border-warning">
+    <div class="card-header bg-warning text-dark">
+        <h4 class="mb-0">⚠️ Confirmation d'annulation</h4>
+    </div>
+    <div class="card-body">
+        <p class="alert alert-warning">
+            <strong>Êtes-vous sûr de vouloir annuler cette réservation ?</strong>
+        </p>
+        <dl class="row">
+            <dt class="col-sm-3">Client</dt>
+            <dd class="col-sm-9">@Model.ClientNom</dd>
+
+            <dt class="col-sm-3">Salle</dt>
+            <dd class="col-sm-9">@Model.Salle.Nom</dd>
+
+            <dt class="col-sm-3">Date début</dt>
+            <dd class="col-sm-9">@Model.DateDebut.ToString("dd/MM/yyyy HH:mm")</dd>
+
+            <dt class="col-sm-3">Date fin</dt>
+            <dd class="col-sm-9">@Model.DateFin.ToString("dd/MM/yyyy HH:mm")</dd>
+        </dl>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">
+                <span>❌</span> Annuler la réservation
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">Retour</a>
+        </form>
+    </div>
+</div>
+

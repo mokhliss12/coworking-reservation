@@ -1,0 +1,28 @@
+@model Coworking.Core.Entities.Notification
+
+@{
+    ViewData["Title"] = "Supprimer la notification";
+}
+
+<h2>Supprimer la notification</h2>
+
+<h3>Êtes-vous sûr de vouloir supprimer cette notification ?</h3>
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Titre</dt>
+        <dd class="col-sm-10">@Model.Titre</dd>
+
+        <dt class="col-sm-2">Message</dt>
+        <dd class="col-sm-10">@Model.Message</dd>
+
+        <dt class="col-sm-2">Date</dt>
+        <dd class="col-sm-10">@Model.DateCreation.ToString("dd/MM/yyyy HH:mm")</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+        <a asp-action="Index" class="btn btn-secondary">Retour</a>
+    </form>
+</div>
+

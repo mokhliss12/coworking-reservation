@@ -1,0 +1,74 @@
+@model Coworking.Core.Entities.Salle
+
+@{
+    ViewData["Title"] = "Détails de la salle";
+}
+
+<h2>Détails de la salle</h2>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+        <dt class="col-sm-2">Nom</dt>
+        <dd class="col-sm-10">@Model.Nom</dd>
+
+        <dt class="col-sm-2">Capacité</dt>
+        <dd class="col-sm-10">@Model.Capacite personnes</dd>
+
+        <dt class="col-sm-2">Prix horaire</dt>
+        <dd class="col-sm-10">@Model.PrixHoraire.ToString("F2") MAD</dd>
+
+        <dt class="col-sm-2">Nombre de réservations</dt>
+        <dd class="col-sm-10">@Model.Reservations.Count</dd>
+    </dl>
+    </div>
+</div>
+
+@if (Model.Reservations.Any())
+{
+    <h3 class="mt-4">Réservations</h3>
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-bordered mb-0">
+        <thead>
+            <tr>
+                <th>Client</th>
+                <th>Date début</th>
+                <th>Date fin</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reservation in Model.Reservations.OrderByDescending(r => r.DateDebut))
+            {
+                <tr>
+                    <td>@reservation.ClientNom</td>
+                    <td>@reservation.DateDebut.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@reservation.DateFin.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        @if (reservation.Statut == "Confirmee")
+                        {
+                            <span class="badge bg-success">Confirmée</span>
+                        }
+                        else if (reservation.Statut == "Annulee")
+                        {
+                            <span class="badge bg-danger">Annulée</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning">En attente</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+        </div>
+    </div>
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
+    <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+</div>
+

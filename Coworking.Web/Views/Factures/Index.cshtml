@@ -1,0 +1,98 @@
+@model IEnumerable<Coworking.Core.Entities.Facture>
+
+@{
+    ViewData["Title"] = "Liste des factures";
+}
+
+<h2>Liste des factures</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Recherche</label>
+                <input type="text" name="search" class="form-control" placeholder="Numéro, client, salle..." value="@ViewBag.Search" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Statut</label>
+                <select name="estPayee" class="form-control">
+                    <option value="">Tous</option>
+                    <option value="true" selected="@(ViewBag.EstPayee == true)">Payées</option>
+                    <option value="false" selected="@(ViewBag.EstPayee == false)">En attente</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Date début</label>
+                <input type="date" name="dateDebut" class="form-control" value="@(ViewBag.DateDebut?.ToString("yyyy-MM-dd"))" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Date fin</label>
+                <input type="date" name="dateFin" class="form-control" value="@(ViewBag.DateFin?.ToString("yyyy-MM-dd"))" />
+            </div>
+            <div class="col-md-1">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="btn btn-primary form-control">Filtrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-bordered mb-0">
+    <thead>
+        <tr>
+            <th>Numéro</th>
+            <th>Date émission</th>
+            <th>Réservation</th>
+            <th>Salle</th>
+            <th>Montant</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var facture in Model)
+        {
+            <tr>
+                <td><strong>@facture.Numero</strong></td>
+                <td>@facture.DateEmission.ToString("dd/MM/yyyy")</td>
+                <td>
+                    <a asp-controller="Reservations" asp-action="Details" asp-route-id="@facture.ReservationId">
+                        Réservation #@facture.ReservationId
+                    </a>
+                </td>
+                <td>@facture.Reservation.Salle.Nom</td>
+                <td>@facture.MontantTotal.ToString("F2") MAD</td>
+                <td>
+                    @if (facture.EstPayee)
+                    {
+                        <span class="badge bg-success">Payée</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning">En attente</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@facture.Id" class="btn btn-sm btn-info">Détails</a>
+                    <a asp-action="DownloadPdf" asp-route-id="@facture.Id" class="btn btn-sm btn-danger">📄 PDF</a>
+                    @if (!facture.EstPayee && User.IsInRole("Admin"))
+                    {
+                        <form asp-action="MarquerPayee" asp-controller="Factures" asp-route-id="@facture.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-success">Marquer payée</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Aucune facture.</p>
+}
+

@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "Accueil";
+}
+
+<div class="text-center mb-5">
+    <h1 class="display-4 mb-3">Plateforme de Réservation de Salles</h1>
+    <p class="lead text-muted">Gérez vos réservations d'espaces de coworking en ligne</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <div class="mb-3" style="font-size: 3rem;">🚪</div>
+                <h5 class="card-title">Salles</h5>
+                <p class="card-text text-muted">Découvrez nos espaces de coworking disponibles.</p>
+                <a asp-controller="SallesPublic" asp-action="Index" class="btn btn-primary">Voir les salles</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <div class="mb-3" style="font-size: 3rem;">📅</div>
+                <h5 class="card-title">Réservations</h5>
+                <p class="card-text text-muted">Consultez et gérez toutes les réservations.</p>
+                <a asp-controller="Reservations" asp-action="Index" class="btn btn-primary">Voir les réservations</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <div class="mb-3" style="font-size: 3rem;">📊</div>
+                <h5 class="card-title">Planning</h5>
+                <p class="card-text text-muted">Visualisez les disponibilités sur le calendrier.</p>
+                <a asp-controller="Planning" asp-action="Index" class="btn btn-primary">Voir le planning</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-2">
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">💰</div>
+                    <h5 class="card-title">Factures</h5>
+                    <p class="card-text text-muted">@(User.IsInRole("Admin") ? "Gérez les factures et les paiements." : "Consultez vos factures.")</p>
+                    <a asp-controller="Factures" asp-action="Index" class="btn btn-success">Voir les factures</a>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <div class="mb-3" style="font-size: 3rem;">🔔</div>
+                <h5 class="card-title">Notifications</h5>
+                <p class="card-text text-muted">Consultez vos notifications et alertes.</p>
+                <a asp-controller="Notifications" asp-action="Index" class="btn btn-info">Voir les notifications</a>
+            </div>
+        </div>
+    </div>
+</div>

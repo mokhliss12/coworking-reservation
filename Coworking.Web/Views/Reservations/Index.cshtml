@@ -1,0 +1,114 @@
+@model IEnumerable<Coworking.Core.Entities.Reservation>
+
+@{
+    ViewData["Title"] = "Liste des réservations";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Liste des réservations</h2>
+    <a asp-action="Create" class="btn btn-success">
+        <span>➕</span> Nouvelle réservation
+    </a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Recherche</label>
+                <input type="text" name="search" class="form-control" placeholder="Nom, email, salle..." value="@ViewBag.Search" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Statut</label>
+                <select name="statut" class="form-control">
+                    <option value="">Tous</option>
+                    <option value="EnAttente" selected="@(ViewBag.Statut == "EnAttente")">En attente</option>
+                    <option value="Confirmee" selected="@(ViewBag.Statut == "Confirmee")">Confirmée</option>
+                    <option value="Annulee" selected="@(ViewBag.Statut == "Annulee")">Annulée</option>
+                </select>
+            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="col-md-2">
+                    <label class="form-label">Salle</label>
+                    <select name="salleId" class="form-control">
+                        <option value="">Toutes</option>
+                        @foreach (var salle in (List<Coworking.Core.Entities.Salle>)ViewBag.Salles)
+                        {
+                            <option value="@salle.Id" selected="@(ViewBag.SalleId == salle.Id)">@salle.Nom</option>
+                        }
+                    </select>
+                </div>
+            }
+            <div class="col-md-2">
+                <label class="form-label">Date début</label>
+                <input type="date" name="dateDebut" class="form-control" value="@(ViewBag.DateDebut?.ToString("yyyy-MM-dd"))" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Date fin</label>
+                <input type="date" name="dateFin" class="form-control" value="@(ViewBag.DateFin?.ToString("yyyy-MM-dd"))" />
+            </div>
+            <div class="col-md-1">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="btn btn-primary form-control">Filtrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-bordered mb-0">
+    <thead>
+        <tr>
+            <th>Client</th>
+            <th>Salle</th>
+            <th>Date début</th>
+            <th>Date fin</th>
+            <th>Durée</th>
+            <th>Montant</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reservation in Model)
+        {
+            <tr>
+                <td>@reservation.ClientNom<br /><small>@reservation.ClientEmail</small></td>
+                <td>@reservation.Salle.Nom</td>
+                <td>@reservation.DateDebut.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@reservation.DateFin.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@((reservation.DateFin - reservation.DateDebut).TotalHours.ToString("F1")) h</td>
+                <td>@reservation.MontantTotal.ToString("F2") MAD</td>
+                <td>
+                    @if (reservation.Statut == "Confirmee")
+                    {
+                        <span class="badge bg-success">Confirmée</span>
+                    }
+                    else if (reservation.Statut == "Annulee")
+                    {
+                        <span class="badge bg-danger">Annulée</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning">En attente</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@reservation.Id" class="btn btn-sm btn-info">Détails</a>
+                    <a asp-action="Edit" asp-route-id="@reservation.Id" class="btn btn-sm btn-primary">Modifier</a>
+                    @if (User.IsInRole("Admin") && reservation.Statut == "EnAttente")
+                    {
+                        <form asp-action="Confirmer" asp-controller="Reservations" asp-route-id="@reservation.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+    </div>
+</div>
+

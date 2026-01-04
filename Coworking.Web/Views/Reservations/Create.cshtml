@@ -1,0 +1,72 @@
+@model Coworking.Core.Entities.Reservation
+
+@{
+    ViewData["Title"] = "Nouvelle réservation";
+}
+
+<h2>Nouvelle réservation</h2>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create" asp-controller="Reservations" method="post">
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+
+    <div class="form-group mb-3">
+        <label asp-for="SalleId" class="form-label"></label>
+        <select asp-for="SalleId" asp-items="ViewData["SalleId"] as SelectList" class="form-control">
+            <option value="">-- Sélectionner une salle --</option>
+        </select>
+        <span asp-validation-for="SalleId" class="text-danger"></span>
+    </div>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="form-group mb-3">
+            <label asp-for="ClientNom" class="form-label"></label>
+            <input asp-for="ClientNom" class="form-control" />
+            <span asp-validation-for="ClientNom" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="ClientEmail" class="form-label"></label>
+            <input asp-for="ClientEmail" type="email" class="form-control" />
+            <span asp-validation-for="ClientEmail" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="ClientTelephone" class="form-label"></label>
+            <input asp-for="ClientTelephone" class="form-control" />
+            <span asp-validation-for="ClientTelephone" class="text-danger"></span>
+        </div>
+    }
+    else
+    {
+        @* Les champs client seront remplis automatiquement par le contrôleur pour les non-admins *@
+    }
+
+    <div class="form-group mb-3">
+        <label asp-for="DateDebut" class="form-label"></label>
+        <input asp-for="DateDebut" type="datetime-local" class="form-control" />
+        <span asp-validation-for="DateDebut" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="DateFin" class="form-label"></label>
+        <input asp-for="DateFin" type="datetime-local" class="form-control" />
+        <span asp-validation-for="DateFin" class="text-danger"></span>
+    </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <span>💾</span> Enregistrer
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">Retour</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

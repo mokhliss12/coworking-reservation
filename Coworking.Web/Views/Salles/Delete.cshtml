@@ -1,0 +1,38 @@
+@model Coworking.Core.Entities.Salle
+
+@{
+    ViewData["Title"] = "Supprimer la salle";
+}
+
+<h2>Supprimer la salle</h2>
+
+<div class="card border-danger">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0">⚠️ Confirmation de suppression</h4>
+    </div>
+    <div class="card-body">
+        <p class="alert alert-warning">
+            <strong>Êtes-vous sûr de vouloir supprimer cette salle ?</strong><br />
+            Cette action est irréversible.
+        </p>
+        <dl class="row">
+            <dt class="col-sm-3">Nom</dt>
+            <dd class="col-sm-9">@Model.Nom</dd>
+
+            <dt class="col-sm-3">Capacité</dt>
+            <dd class="col-sm-9">@Model.Capacite personnes</dd>
+
+            <dt class="col-sm-3">Prix horaire</dt>
+            <dd class="col-sm-9">@Model.PrixHoraire.ToString("F2") MAD</dd>
+        </dl>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">
+                <span>🗑️</span> Supprimer définitivement
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+        </form>
+    </div>
+</div>
+

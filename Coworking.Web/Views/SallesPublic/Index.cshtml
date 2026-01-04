@@ -1,0 +1,45 @@
+@model IEnumerable<Coworking.Core.Entities.Salle>
+
+@{
+    ViewData["Title"] = "Nos salles disponibles";
+}
+
+<h2>Nos salles disponibles</h2>
+<p class="text-muted mb-4">Découvrez nos espaces de coworking et leurs équipements</p>
+
+<div class="row g-4">
+    @foreach (var salle in Model)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">@salle.Nom</h5>
+                    <p class="card-text">
+                        <strong>Capacité :</strong> @salle.Capacite personnes<br />
+                        <strong>Prix horaire :</strong> <span class="text-success fw-bold">@salle.PrixHoraire.ToString("F2") MAD</span>
+                    </p>
+                    <p class="text-muted small">
+                        @salle.Reservations.Count réservation(s) active(s)
+                    </p>
+                    <a asp-action="Details" asp-route-id="@salle.Id" class="btn btn-primary">Voir les détails</a>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a asp-controller="Reservations" asp-action="Create" asp-route-salleId="@salle.Id" class="btn btn-success">Réserver</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-success">Réserver (connexion requise)</a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <p class="mb-0">Aucune salle disponible pour le moment.</p>
+    </div>
+}
+

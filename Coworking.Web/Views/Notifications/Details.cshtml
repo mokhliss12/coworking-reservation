@@ -1,0 +1,52 @@
+@model Coworking.Core.Entities.Notification
+
+@{
+    ViewData["Title"] = "Détails de la notification";
+}
+
+<h2>Détails de la notification</h2>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Titre</dt>
+        <dd class="col-sm-10">@Model.Titre</dd>
+
+        <dt class="col-sm-2">Message</dt>
+        <dd class="col-sm-10">@Model.Message</dd>
+
+        <dt class="col-sm-2">Type</dt>
+        <dd class="col-sm-10">
+            <span class="badge bg-info">@Model.Type</span>
+        </dd>
+
+        <dt class="col-sm-2">Date</dt>
+        <dd class="col-sm-10">@Model.DateCreation.ToString("dd/MM/yyyy HH:mm")</dd>
+
+        <dt class="col-sm-2">Statut</dt>
+        <dd class="col-sm-10">
+            @if (Model.EstLue)
+            {
+                <span class="badge bg-secondary">Lue</span>
+            }
+            else
+            {
+                <span class="badge bg-primary">Non lue</span>
+            }
+        </dd>
+
+        @if (Model.Reservation != null)
+        {
+            <dt class="col-sm-2">Réservation</dt>
+            <dd class="col-sm-10">
+                <a asp-controller="Reservations" asp-action="Details" asp-route-id="@Model.Reservation.Id">
+                    Réservation #@Model.Reservation.Id - @Model.Reservation.Salle.Nom
+                </a>
+            </dd>
+        }
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+</div>
+

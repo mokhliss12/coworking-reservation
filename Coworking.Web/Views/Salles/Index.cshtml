@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Coworking.Core.Entities.Salle>
+
+@{
+    ViewData["Title"] = "Liste des salles";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Liste des salles</h2>
+    <a asp-action="Create" class="btn btn-success">
+        <span>➕</span> Ajouter une salle
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-bordered mb-0">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Capacité</th>
+            <th>Prix / heure</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var salle in Model)
+        {
+            <tr>
+                <td>@salle.Nom</td>
+                <td>@salle.Capacite</td>
+                <td>@salle.PrixHoraire.ToString("F2") MAD</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@salle.Id" class="btn btn-sm btn-info">Détails</a>
+                    <a asp-action="Edit" asp-route-id="@salle.Id" class="btn btn-sm btn-primary">Modifier</a>
+                    <a asp-action="Delete" asp-route-id="@salle.Id" class="btn btn-sm btn-danger">Supprimer</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+    </div>
+</div>
+

@@ -1,0 +1,47 @@
+﻿@model Coworking.Core.Entities.Salle
+
+@{
+    ViewData["Title"] = "Ajouter une salle";
+}
+
+<h2>Ajouter une salle</h2>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create" asp-controller="Salles" method="post">
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Nom" class="form-label"></label>
+                <input asp-for="Nom" class="form-control" placeholder="Ex: Salle de réunion A" />
+                <span asp-validation-for="Nom" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Capacite" class="form-label"></label>
+                <input asp-for="Capacite" type="number" class="form-control" placeholder="Ex: 10" />
+                <span asp-validation-for="Capacite" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="PrixHoraire" class="form-label"></label>
+                <div class="input-group">
+                    <input asp-for="PrixHoraire" type="number" step="0.01" class="form-control" placeholder="Ex: 150.00" />
+                    <span class="input-group-text">MAD</span>
+                </div>
+                <span asp-validation-for="PrixHoraire" class="text-danger"></span>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <span>💾</span> Enregistrer
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">Retour</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

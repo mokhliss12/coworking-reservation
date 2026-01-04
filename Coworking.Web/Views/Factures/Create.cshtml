@@ -1,0 +1,51 @@
+@model Coworking.Core.Entities.Facture
+
+@{
+    ViewData["Title"] = "Créer une facture";
+}
+
+<h2>Créer une facture</h2>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create" asp-controller="Factures" method="post">
+            <input type="hidden" asp-for="ReservationId" />
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Numero" class="form-label"></label>
+                <input asp-for="Numero" class="form-control" readonly />
+                <span asp-validation-for="Numero" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="DateEmission" class="form-label"></label>
+                <input asp-for="DateEmission" type="date" class="form-control" />
+                <span asp-validation-for="DateEmission" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="MontantTotal" class="form-label"></label>
+                <input asp-for="MontantTotal" class="form-control" />
+                <span asp-validation-for="MontantTotal" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <div class="form-check">
+                    <input asp-for="EstPayee" type="checkbox" class="form-check-input" />
+                    <label asp-for="EstPayee" class="form-check-label">Marquer comme payée</label>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
+                <a asp-controller="Reservations" asp-action="Details" asp-route-id="@Model.ReservationId" class="btn btn-secondary">Retour</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

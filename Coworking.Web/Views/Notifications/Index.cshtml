@@ -1,0 +1,104 @@
+@model IEnumerable<Coworking.Core.Entities.Notification>
+
+@{
+    ViewData["Title"] = "Notifications";
+    var nonLues = Model.Count(n => !n.EstLue);
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Notifications</h2>
+    @if (nonLues > 0)
+    {
+        <form asp-action="MarquerToutesLues" asp-controller="Notifications" method="post">
+            <button type="submit" class="btn btn-secondary">Marquer toutes comme lues</button>
+        </form>
+    }
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Recherche</label>
+                <input type="text" name="search" class="form-control" placeholder="Titre, message..." value="@ViewBag.Search" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Type</label>
+                <select name="type" class="form-control">
+                    <option value="">Tous</option>
+                    <option value="Reservation" selected="@(ViewBag.Type == "Reservation")">Réservation</option>
+                    <option value="Facture" selected="@(ViewBag.Type == "Facture")">Facture</option>
+                    <option value="Rappel" selected="@(ViewBag.Type == "Rappel")">Rappel</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Statut</label>
+                <select name="estLue" class="form-control">
+                    <option value="">Tous</option>
+                    <option value="false" selected="@(ViewBag.EstLue == false)">Non lues</option>
+                    <option value="true" selected="@(ViewBag.EstLue == true)">Lues</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="btn btn-primary form-control">Filtrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-bordered mb-0">
+    <thead>
+        <tr>
+            <th>Statut</th>
+            <th>Titre</th>
+            <th>Message</th>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var notification in Model)
+        {
+            <tr class="@(!notification.EstLue ? "table-warning" : "")">
+                <td>
+                    @if (notification.EstLue)
+                    {
+                        <span class="badge bg-secondary">Lue</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-primary">Non lue</span>
+                    }
+                </td>
+                <td><strong>@notification.Titre</strong></td>
+                <td>@notification.Message</td>
+                <td>
+                    <span class="badge bg-info">@notification.Type</span>
+                </td>
+                <td>@notification.DateCreation.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@notification.Id" class="btn btn-sm btn-info">Détails</a>
+                    @if (!notification.EstLue)
+                    {
+                        <form asp-action="MarquerLue" asp-controller="Notifications" asp-route-id="@notification.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-success">Marquer lue</button>
+                        </form>
+                    }
+                    <a asp-action="Delete" asp-route-id="@notification.Id" class="btn btn-sm btn-danger">Supprimer</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Aucune notification.</p>
+}
+

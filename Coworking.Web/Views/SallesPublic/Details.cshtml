@@ -1,0 +1,70 @@
+@model Coworking.Core.Entities.Salle
+
+@{
+    ViewData["Title"] = "Détails de la salle";
+}
+
+<h2>@Model.Nom</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Capacité</dt>
+                    <dd class="col-sm-8">@Model.Capacite personnes</dd>
+
+                    <dt class="col-sm-4">Prix horaire</dt>
+                    <dd class="col-sm-8"><span class="text-success fw-bold h5">@Model.PrixHoraire.ToString("F2") MAD</span></dd>
+
+                    <dt class="col-sm-4">Réservations actives</dt>
+                    <dd class="col-sm-8">@Model.Reservations.Count</dd>
+                </dl>
+
+                <div class="mt-4">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a asp-controller="Reservations" asp-action="Create" asp-route-salleId="@Model.Id" class="btn btn-success btn-lg">
+                            <span>📅</span> Réserver cette salle
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-success btn-lg">
+                            <span>🔐</span> Connectez-vous pour réserver
+                        </a>
+                    }
+                    <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Prochaines réservations</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.Reservations.Any())
+                {
+                    <ul class="list-unstyled">
+                        @foreach (var reservation in Model.Reservations.OrderBy(r => r.DateDebut).Take(5))
+                        {
+                            <li class="mb-2">
+                                <small class="text-muted">@reservation.DateDebut.ToString("dd/MM/yyyy HH:mm")</small><br />
+                                <span class="badge @(reservation.Statut == "Confirmee" ? "bg-success" : "bg-warning")">
+                                    @reservation.Statut
+                                </span>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">Aucune réservation prévue</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

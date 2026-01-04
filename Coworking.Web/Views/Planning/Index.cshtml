@@ -1,0 +1,96 @@
+@{
+    ViewData["Title"] = "Planning des disponibilités";
+    var date = (DateTime)ViewBag.Date;
+    var reservations = (List<Coworking.Core.Entities.Reservation>)ViewBag.Reservations;
+    var salleId = ViewBag.SalleId as int?;
+}
+
+<h2>Planning des disponibilités</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get">
+    <div class="row">
+        <div class="col-md-4">
+            <label>Salle</label>
+            <select name="salleId" asp-items="ViewBag.SalleId" class="form-control">
+                <option value="">Toutes les salles</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label>Mois</label>
+            <select name="mois" class="form-control">
+                @for (int i = 1; i <= 12; i++)
+                {
+                    <option value="@i" selected="@(date.Month == i)">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label>Année</label>
+            <select name="annee" class="form-control">
+                @for (int i = date.Year - 1; i <= date.Year + 1; i++)
+                {
+                    <option value="@i" selected="@(date.Year == i)">@i</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label>&nbsp;</label>
+            <button type="submit" class="btn btn-primary form-control">Filtrer</button>
+        </div>
+    </div>
+        </form>
+    </div>
+</div>
+
+<h3 class="mb-3">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month) @date.Year</h3>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered mb-0">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Réservations</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var joursDansMois = DateTime.DaysInMonth(date.Year, date.Month);
+                for (int jour = 1; jour <= joursDansMois; jour++)
+                {
+                    var dateJour = new DateTime(date.Year, date.Month, jour);
+                    var reservationsJour = reservations.Where(r => r.DateDebut.Date <= dateJour.Date && r.DateFin.Date >= dateJour.Date).ToList();
+                    <tr>
+                        <td>@dateJour.ToString("dddd dd/MM/yyyy", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"))</td>
+                        <td>
+                            @if (reservationsJour.Any())
+                            {
+                                <ul class="list-unstyled mb-0">
+                                    @foreach (var res in reservationsJour)
+                                    {
+                                        <li>
+                                            <span class="badge @(res.Statut == "Confirmee" ? "bg-success" : "bg-warning")">
+                                                @res.Salle.Nom: @res.DateDebut.ToString("HH:mm") - @res.DateFin.ToString("HH:mm")
+                                            </span>
+                                            <small class="text-muted">(@res.ClientNom)</small>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span class="text-success">Disponible</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+        </div>
+    </div>
+</div>
+

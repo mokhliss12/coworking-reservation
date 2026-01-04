@@ -1,0 +1,76 @@
+@model Coworking.Core.Entities.Facture
+
+@{
+    ViewData["Title"] = "Détails de la facture";
+}
+
+<h2>Détails de la facture</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="mb-0">Facture @Model.Numero</h3>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Numéro</dt>
+            <dd class="col-sm-9"><strong>@Model.Numero</strong></dd>
+
+            <dt class="col-sm-3">Date d'émission</dt>
+            <dd class="col-sm-9">@Model.DateEmission.ToString("dd/MM/yyyy")</dd>
+
+            <dt class="col-sm-3">Réservation</dt>
+            <dd class="col-sm-9">
+                <a asp-controller="Reservations" asp-action="Details" asp-route-id="@Model.ReservationId">
+                    Réservation #@Model.ReservationId
+                </a>
+            </dd>
+
+            <dt class="col-sm-3">Salle</dt>
+            <dd class="col-sm-9">@Model.Reservation.Salle.Nom</dd>
+
+            <dt class="col-sm-3">Client</dt>
+            <dd class="col-sm-9">@Model.Reservation.ClientNom</dd>
+
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.Reservation.ClientEmail</dd>
+
+            <dt class="col-sm-3">Période</dt>
+            <dd class="col-sm-9">
+                Du @Model.Reservation.DateDebut.ToString("dd/MM/yyyy HH:mm")
+                au @Model.Reservation.DateFin.ToString("dd/MM/yyyy HH:mm")
+            </dd>
+
+            <dt class="col-sm-3">Durée</dt>
+            <dd class="col-sm-9">@((Model.Reservation.DateFin - Model.Reservation.DateDebut).TotalHours.ToString("F1")) heures</dd>
+
+            <dt class="col-sm-3">Montant total</dt>
+            <dd class="col-sm-9"><strong class="h4">@Model.MontantTotal.ToString("F2") MAD</strong></dd>
+
+            <dt class="col-sm-3">Statut</dt>
+            <dd class="col-sm-9">
+                @if (Model.EstPayee)
+                {
+                    <span class="badge bg-success">Payée</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning">En attente de paiement</span>
+                }
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="DownloadPdf" asp-route-id="@Model.Id" class="btn btn-danger">
+        <span>📄</span> Télécharger PDF
+    </a>
+    @if (!Model.EstPayee && User.IsInRole("Admin"))
+    {
+        <form asp-action="MarquerPayee" asp-controller="Factures" asp-route-id="@Model.Id" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-success">Marquer comme payée</button>
+        </form>
+    }
+    <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+</div>
+

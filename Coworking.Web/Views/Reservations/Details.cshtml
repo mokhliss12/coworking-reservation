@@ -1,0 +1,110 @@
+@model Coworking.Core.Entities.Reservation
+
+@{
+    ViewData["Title"] = "Détails de la réservation";
+}
+
+<h2>Détails de la réservation</h2>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+        <dt class="col-sm-2">Client</dt>
+        <dd class="col-sm-10">@Model.ClientNom</dd>
+
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@Model.ClientEmail</dd>
+
+        <dt class="col-sm-2">Téléphone</dt>
+        <dd class="col-sm-10">@Model.ClientTelephone</dd>
+
+        <dt class="col-sm-2">Salle</dt>
+        <dd class="col-sm-10">@Model.Salle.Nom</dd>
+
+        <dt class="col-sm-2">Date début</dt>
+        <dd class="col-sm-10">@Model.DateDebut.ToString("dd/MM/yyyy HH:mm")</dd>
+
+        <dt class="col-sm-2">Date fin</dt>
+        <dd class="col-sm-10">@Model.DateFin.ToString("dd/MM/yyyy HH:mm")</dd>
+
+        <dt class="col-sm-2">Durée</dt>
+        <dd class="col-sm-10">@((Model.DateFin - Model.DateDebut).TotalHours.ToString("F1")) heures</dd>
+
+        <dt class="col-sm-2">Montant total</dt>
+        <dd class="col-sm-10">@Model.MontantTotal.ToString("F2") MAD</dd>
+
+        <dt class="col-sm-2">Statut</dt>
+        <dd class="col-sm-10">
+            @if (Model.Statut == "Confirmee")
+            {
+                <span class="badge bg-success">Confirmée</span>
+            }
+            else if (Model.Statut == "Annulee")
+            {
+                <span class="badge bg-danger">Annulée</span>
+            }
+            else
+            {
+                <span class="badge bg-warning">En attente</span>
+            }
+        </dd>
+    </dl>
+    </div>
+</div>
+
+@if (Model.Factures.Any())
+{
+    <h3 class="mt-4">Factures</h3>
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-bordered mb-0">
+        <thead>
+            <tr>
+                <th>Numéro</th>
+                <th>Date émission</th>
+                <th>Montant</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var facture in Model.Factures)
+            {
+                <tr>
+                    <td>@facture.Numero</td>
+                    <td>@facture.DateEmission.ToString("dd/MM/yyyy")</td>
+                    <td>@facture.MontantTotal.ToString("F2") MAD</td>
+                    <td>
+                        @if (facture.EstPayee)
+                        {
+                            <span class="badge bg-success">Payée</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning">En attente</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+        </div>
+    </div>
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
+    @if (User.IsInRole("Admin") && Model.Statut == "Confirmee")
+    {
+        var factureExistante = Model.Factures.FirstOrDefault();
+        @if (factureExistante == null)
+        {
+            <a asp-controller="Factures" asp-action="Create" asp-route-reservationId="@Model.Id" class="btn btn-success">Créer facture</a>
+        }
+        else
+        {
+            <a asp-controller="Factures" asp-action="Details" asp-route-id="@factureExistante.Id" class="btn btn-info">Voir facture</a>
+        }
+    }
+    <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+</div>
+

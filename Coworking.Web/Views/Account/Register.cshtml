@@ -1,0 +1,89 @@
+@model Coworking.Web.Models.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Inscription";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0 text-center">✨ Créer un compte</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Nom"></label>
+                                <input asp-for="Nom" class="form-control" placeholder="Dupont" />
+                                <span asp-validation-for="Nom" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Prenom"></label>
+                                <input asp-for="Prenom" class="form-control" placeholder="Jean" />
+                                <span asp-validation-for="Prenom" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="votre@email.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="TypeUtilisateur"></label>
+                        <select asp-for="TypeUtilisateur" class="form-control">
+                            <option value="">-- Sélectionner --</option>
+                            <option value="Etudiant">Étudiant</option>
+                            <option value="Freelance">Freelance</option>
+                            <option value="Startup">Startup</option>
+                            <option value="Entreprise">Entreprise</option>
+                            <option value="Formateur">Formateur</option>
+                        </select>
+                        <span asp-validation-for="TypeUtilisateur" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Entreprise"></label>
+                        <input asp-for="Entreprise" class="form-control" placeholder="Nom de l'entreprise (optionnel)" />
+                        <span asp-validation-for="Entreprise" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" class="form-control" placeholder="Minimum 6 caractères" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword"></label>
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirmer le mot de passe" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-success w-100">
+                            <span>✨</span> Créer mon compte
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p>Déjà un compte ? <a asp-action="Login">Se connecter</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
