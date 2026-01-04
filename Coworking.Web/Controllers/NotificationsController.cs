@@ -86,7 +86,7 @@ public class NotificationsController : Controller
         }
 
         // Les clients ne peuvent voir que leurs propres notifications
-        if (!User.IsInRole("Admin") && (notification.Reservation == null || notification.Reservation.ClientEmail != user!.Email))
+        if (!User.IsInRole("Admin") && (notification.Reservation == null || notification.Reservation.ClientEmail != user?.Email))
         {
             return Forbid();
         }

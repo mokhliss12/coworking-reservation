@@ -89,11 +89,9 @@ public class PdfService
                     .AlignCenter()
                     .Text(text =>
                     {
-                        text.Span("Plateforme de Réservation de Salles - ");
-                        text.Span(DateTime.Now.Year.ToString());
-                    })
-                    .FontSize(8)
-                    .FontColor(Colors.Grey.Medium);
+                        text.Span("Plateforme de Réservation de Salles - ").FontSize(8).FontColor(Colors.Grey.Medium);
+                        text.Span(DateTime.Now.Year.ToString()).FontSize(8).FontColor(Colors.Grey.Medium);
+                    });
             });
         });
 
