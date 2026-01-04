@@ -136,9 +136,18 @@ public class ReservationsController : Controller
             ModelState.Remove(nameof(reservation.ClientTelephone));
         }
 
+        // Vérifier que SalleId est valide avant les autres validations
+        if (reservation.SalleId <= 0)
+        {
+            ModelState.AddModelError(nameof(reservation.SalleId), "La salle est requise.");
+        }
+
+        // Toujours recréer le SelectList pour la vue, même en cas d'erreur
+        var salles = await _context.Salles.ToListAsync();
+        ViewData["SalleId"] = new SelectList(salles, "Id", "Nom", reservation.SalleId);
+
         if (ModelState.IsValid)
         {
-
             // Vérifier les conflits de réservation
             var conflit = await _context.Reservations
                 .Where(r => r.SalleId == reservation.SalleId
@@ -151,7 +160,6 @@ public class ReservationsController : Controller
             if (conflit != null)
             {
                 ModelState.AddModelError("", "Cette salle est déjà réservée pour cette période.");
-                ViewData["SalleId"] = new SelectList(await _context.Salles.ToListAsync(), "Id", "Nom", reservation.SalleId);
                 return View(reservation);
             }
 
@@ -159,7 +167,6 @@ public class ReservationsController : Controller
             if (reservation.DateDebut >= reservation.DateFin)
             {
                 ModelState.AddModelError("", "La date de fin doit être postérieure à la date de début.");
-                ViewData["SalleId"] = new SelectList(await _context.Salles.ToListAsync(), "Id", "Nom", reservation.SalleId);
                 return View(reservation);
             }
 
@@ -192,7 +199,7 @@ public class ReservationsController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        ViewData["SalleId"] = new SelectList(await _context.Salles.ToListAsync(), "Id", "Nom", reservation.SalleId);
+        // ViewData["SalleId"] déjà défini plus haut (ligne 147)
         return View(reservation);
     }
 

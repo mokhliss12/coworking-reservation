@@ -13,7 +13,7 @@
 
     <div class="form-group mb-3">
         <label asp-for="SalleId" class="form-label"></label>
-        <select asp-for="SalleId" asp-items="@(ViewData["SalleId"] as SelectList)" class="form-control">
+        <select asp-for="SalleId" asp-items="@(ViewData["SalleId"] as SelectList)" class="form-control" required>
             <option value="">-- Sélectionner une salle --</option>
         </select>
         <span asp-validation-for="SalleId" class="text-danger"></span>
